@@ -8,9 +8,13 @@ const courseRoutes = require("./routes/courses");
 const lectureRoutes = require("./routes/lectures");
 
 const app = express();
+const corsoption = {
+  origin: ["http://localhost:5173"],
+  credentials: true,
+};
+app.use(express.urlencoded({ extended: true }));
+app.use(cors(corsoption));
 
-// Middleware
-app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
