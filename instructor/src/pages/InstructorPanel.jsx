@@ -45,8 +45,16 @@ const InstructorPanel = () => {
                 key={lecture._id}
                 className="bg-blue-50 border border-blue-200 p-5 rounded-lg shadow-md hover:shadow-xl transition"
               >
+                {/* Course Image on Top - Check if course exists */}
+                {lecture.course && lecture.course.image && (
+                  <img
+                    src={`http://localhost:5000/${lecture.course.image}`}
+                    alt={lecture.course.name}
+                    className="w-full h-40 object-cover rounded-t-lg mb-3"
+                  />
+                )}
                 <h2 className="text-lg font-semibold text-blue-700 mb-2">
-                  {lecture.course.name}
+                  {lecture.course ? lecture.course.name : "Unknown Course"}
                 </h2>
                 <p className="text-gray-600">
                   <strong>Date:</strong>{" "}

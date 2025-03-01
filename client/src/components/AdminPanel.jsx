@@ -56,32 +56,43 @@ const AdminPanel = () => {
             <h2 className="text-xl font-semibold text-gray-700">Courses</h2>
           </div>
           <div className="mt-4 h-60 overflow-y-auto">
-            <ul>
+            <ul className="space-y-4">
               {courses.map((course) => (
                 <li
                   key={course._id}
-                  className="border-b border-gray-200 p-3 hover:bg-gray-50"
+                  className="border-b border-gray-200 p-3 hover:bg-gray-50 flex justify-between items-center"
                 >
-                  <p className="font-semibold text-lg">{course.name}</p>
-                  <p className="text-gray-600">Level: {course.level}</p>
-                  <p className="text-gray-600">
-                    Description: {course.description}
-                  </p>
+                  {/* Left Side - Course Details */}
+                  <div className="flex-1">
+                    <p className="font-semibold text-lg">{course.name}</p>
+                    <p className="text-gray-600">Level: {course.level}</p>
+                    <p className="text-gray-600">
+                      Description: {course.description}
+                    </p>
+                    <p className="text-gray-600">
+                      Batches:{" "}
+                      {course.batches.length > 0 ? (
+                        <span className="font-medium">
+                          {course.batches
+                            .map((batch) => batch.batchName)
+                            .join(", ")}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">
+                          No batches available
+                        </span>
+                      )}
+                    </p>
+                  </div>
 
-                  <p className="text-gray-600">
-                    Batches:{" "}
-                    {course.batches.length > 0 ? (
-                      <span className="font-medium">
-                        {course.batches
-                          .map((batch) => batch.batchName)
-                          .join(", ")}
-                      </span>
-                    ) : (
-                      <span className="text-gray-400">
-                        No batches available
-                      </span>
-                    )}
-                  </p>
+                  {/* Right Side - Course Image */}
+                  <div className="w-40 h-40 flex-shrink-0 ml-4">
+                    <img
+                      src={`http://localhost:5000/${course.image}`} // Adjust URL based on backend setup
+                      alt={course.name}
+                      className="w-full h-full object-cover rounded-lg shadow-md"
+                    />
+                  </div>
                 </li>
               ))}
             </ul>

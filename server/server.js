@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
+const path = require("path");
 const instructorRoutes = require("./routes/instructors");
 const courseRoutes = require("./routes/courses");
 const lectureRoutes = require("./routes/lectures");
@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsoption));
 
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Connect to MongoDB
 mongoose
