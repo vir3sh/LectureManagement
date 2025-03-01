@@ -91,7 +91,10 @@ router.put("/:id", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (email !== "admin@gmail.com" || password !== "adminpassword") {
+    if (
+      email !== process.env.ADMIN_EMAIL ||
+      password !== process.env.ADMIN_PASSWORD
+    ) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
     const token = jwt.sign({ email }, process.env.JWT_SECRET, {
