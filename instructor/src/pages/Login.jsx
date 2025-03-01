@@ -20,12 +20,11 @@ const Login = () => {
         { email, password }
       );
 
-      // Store token + instructorId
       login(response.data.token, response.data.instructorId);
 
-      // Redirect to instructor panel
       navigate(`/instructor/${response.data.instructorId}`);
     } catch (error) {
+      console.log(error);
       setError("Invalid login credentials");
     }
   };

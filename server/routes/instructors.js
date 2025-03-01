@@ -1,10 +1,8 @@
-// routes/instructors.js
 const express = require("express");
 const router = express.Router();
 const Instructor = require("../models/Instructor");
 const jwt = require("jsonwebtoken");
 
-// Get all instructors
 router.get("/", async (req, res) => {
   try {
     const instructors = await Instructor.find();
@@ -34,7 +32,6 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// Add a new instructor (using name, email, and password)
 router.post("/", async (req, res) => {
   const { name, email, password } = req.body;
   const instructor = new Instructor({
@@ -54,14 +51,12 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Find instructor by email
     const instructor = await Instructor.findOne({ email });
 
     if (!instructor || instructor.password !== password) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Generate JWT Token
     const token = jwt.sign(
       { instructorId: instructor._id, email: instructor.email },
       process.env.JWT_SECRET,
@@ -74,7 +69,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Update an instructor's details (optionally updating password)
 router.put("/:id", async (req, res) => {
   try {
     const instructor = await Instructor.findById(req.params.id);

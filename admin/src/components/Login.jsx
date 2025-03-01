@@ -14,7 +14,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
+    setError(""); 
 
     try {
       const response = await axios.post(

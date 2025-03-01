@@ -1,9 +1,7 @@
-// routes/lectures.js
 const express = require("express");
 const router = express.Router();
 const Lecture = require("../models/Lecture");
 
-// Schedule a new lecture
 router.post("/", async (req, res) => {
   const { course, instructor, date, details } = req.body;
 
@@ -33,8 +31,12 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const lectures = await Lecture.find()
-      .populate("course", "name") // Get only the 'name' field from Course
-      .populate("instructor", "name"); // Get only the 'name' field from Instructor
+      .populate({
+        path: "course",
+        select: "name batches", // Include batches
+      })
+
+      .populate("instructor", "name");
 
     res.json(lectures);
   } catch (error) {
@@ -42,7 +44,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get lectures for a specific instructor (for the Instructor Panel)
 router.get("/instructor/:instructorId", async (req, res) => {
   try {
     const lectures = await Lecture.find({

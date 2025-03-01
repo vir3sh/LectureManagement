@@ -8,12 +8,14 @@ const batchSchema = new mongoose.Schema({
   },
 });
 
-const courseSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  level: { type: String, required: true },
-  description: String,
-  image: String,
-  batches: [batchSchema],
-});
-
+const courseSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    level: { type: String, required: true },
+    description: String,
+    image: String,
+    batches: [batchSchema],
+  },
+  { timestamps: true }
+);
 module.exports = mongoose.model("Course", courseSchema);

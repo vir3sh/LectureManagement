@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { AdminContext } from "../context/AdminContext";
 import { FaChalkboardTeacher, FaBook, FaVideo } from "react-icons/fa";
 
+import { format } from "date-fns";
 const AdminPanel = () => {
   const {
     instructors,
@@ -83,12 +84,18 @@ const AdminPanel = () => {
                         </span>
                       )}
                     </p>
+                    <p className="text-gray-500 text-sm">
+                      Created on:{" "}
+                      {course.createdAt
+                        ? format(new Date(course.createdAt), "PPP")
+                        : "Unknown Date"}
+                    </p>
                   </div>
 
                   {/* Right Side - Course Image */}
                   <div className="w-40 h-40 flex-shrink-0 ml-4">
                     <img
-                      src={`http://localhost:5000/${course.image}`} // Adjust URL based on backend setup
+                      src={`http://localhost:5000/${course.image}`} 
                       alt={course.name}
                       className="w-full h-full object-cover rounded-lg shadow-md"
                     />

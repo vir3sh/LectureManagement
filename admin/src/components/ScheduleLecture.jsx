@@ -48,7 +48,7 @@ const ScheduleLecture = () => {
             value={lectureData.courseId}
             onChange={
               (e) =>
-                setLectureData({ ...lectureData, courseId: e.target.value }) // Must be an ObjectId
+                setLectureData({ ...lectureData, courseId: e.target.value }) 
             }
             className="w-full border p-2 rounded"
             required
@@ -69,7 +69,7 @@ const ScheduleLecture = () => {
             value={lectureData.instructorId}
             onChange={
               (e) =>
-                setLectureData({ ...lectureData, instructorId: e.target.value }) // This should be an ObjectId
+                setLectureData({ ...lectureData, instructorId: e.target.value }) 
             }
             className="w-full border p-2 rounded"
             required

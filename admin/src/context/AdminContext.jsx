@@ -1,4 +1,3 @@
-// src/context/AdminContext.js
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
@@ -9,7 +8,7 @@ export const AdminProvider = ({ children }) => {
   const [courses, setCourses] = useState([]);
   const [lectures, setLectures] = useState([]);
   const [allLectures, setAlllectures] = useState([]);
-  const backendUrl = "http://localhost:5000"; // Update with your backend URL
+  const backendUrl = "http://localhost:5000";
 
   const [token, setToken] = useState(localStorage.getItem("adminToken") || "");
 
@@ -104,13 +103,13 @@ export const AdminProvider = ({ children }) => {
   const scheduleLecture = async (lecture) => {
     try {
       const response = await axios.post(`${backendUrl}/api/lectures`, {
-        course: lecture.courseId, // Changing courseId to course
-        instructor: lecture.instructorId, // Changing instructorId to instructor
+        course: lecture.courseId,
+        instructor: lecture.instructorId,
         date: lecture.date,
         details: lecture.details,
       });
 
-      setLectures((prev) => [...prev, response.data]); // Add scheduled lecture to state
+      setLectures((prev) => [...prev, response.data]);
     } catch (error) {
       console.error("Error scheduling lecture:", error.response?.data);
       throw new Error(

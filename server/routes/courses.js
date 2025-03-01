@@ -15,29 +15,26 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Add a new course with multiple batches and an image upload
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { name, level, description, batches } = req.body;
-    let parsedBatches;
+    let parsedBatches = [];
 
-    if (typeof batches === "string") {
+    // Parse the batches JSON string
+    if (batches) {
       try {
-        // Try to parse the string as JSON
         parsedBatches = JSON.parse(batches);
-        // If the parsed value is not an array, wrap it in an array
         if (!Array.isArray(parsedBatches)) {
-          parsedBatches = [{ batchName: parsedBatches }];
+          return res
+            .status(400)
+            .json({ message: "Batches should be an array" });
         }
       } catch (err) {
-        // If JSON parsing fails, assume it's a plain string and wrap it in an array
-        parsedBatches = [{ batchName: batches }];
+        return res.status(400).json({ message: "Invalid batches format" });
       }
-    } else {
-      // If it's already an array, use it as is
-      parsedBatches = batches;
     }
 
+    // Construct the course data
     const courseData = {
       name,
       level,
@@ -45,7 +42,7 @@ router.post("/", upload.single("image"), async (req, res) => {
       batches: parsedBatches,
     };
 
-    // If an image file was uploaded, add its path to the course data
+    // If an image file was uploaded, add its path
     if (req.file) {
       courseData.image = req.file.path;
     }
@@ -54,7 +51,7 @@ router.post("/", upload.single("image"), async (req, res) => {
     const newCourse = await course.save();
     res.status(201).json(newCourse);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
