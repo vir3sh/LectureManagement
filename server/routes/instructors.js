@@ -13,6 +13,16 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+router.get("/:id", async (req, res) => {
+  try {
+    const instructor = await Instructor.findById(req.params.id);
+    if (!instructor)
+      return res.status(404).json({ message: "Instructor not found" });
+    res.json(instructor);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // Add a new instructor (using name, email, and password)
 router.post("/", async (req, res) => {
@@ -27,6 +37,30 @@ router.post("/", async (req, res) => {
     res.status(201).json(newInstructor);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Find instructor by email
+    const instructor = await Instructor.findOne({ email });
+
+    if (!instructor || instructor.password !== password) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    // Generate JWT Token
+    const token = jwt.sign(
+      { instructorId: instructor._id, email: instructor.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.json({ token, instructorId: instructor._id });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
   }
 });
 
