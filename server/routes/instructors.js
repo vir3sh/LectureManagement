@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const Instructor = require("../models/Instructor");
+const jwt = require("jsonwebtoken");
 
 // Get all instructors
 router.get("/", async (req, res) => {
@@ -46,6 +47,23 @@ router.put("/:id", async (req, res) => {
     res.json(updatedInstructor);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (email !== "admin@gmail.com" || password !== "adminpassword") {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    res.cookie("token", token, { httpOnly: true });
+    res.json({ token, message: "Admin logged in successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

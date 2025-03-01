@@ -1,4 +1,3 @@
-// src/components/InstructorList.js
 import React, { useContext, useState, useEffect } from "react";
 import { AdminContext } from "../context/AdminContext";
 import { toast } from "react-toastify";
@@ -13,10 +12,15 @@ const InstructorList = () => {
   } = useContext(AdminContext);
 
   const [editId, setEditId] = useState(null);
-  const [formData, setFormData] = useState({
+  const [addFormData, setAddFormData] = useState({
     name: "",
     email: "",
     password: "",
+  });
+
+  const [editFormData, setEditFormData] = useState({
+    name: "",
+    email: "",
   });
 
   useEffect(() => {
@@ -24,54 +28,57 @@ const InstructorList = () => {
   }, []);
 
   const handleEdit = (instructor) => {
-    setEditId(instructor.id);
-    setFormData({
+    setEditId(instructor._id);
+    setEditFormData({
       name: instructor.name,
       email: instructor.email,
-      password: "",
     });
   };
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    updateInstructor(editId, { name: formData.name, email: formData.email });
+    updateInstructor(editId, editFormData);
     setEditId(null);
   };
 
   const handleAdd = (e) => {
     e.preventDefault();
-    addInstructor(formData);
-    if (addInstructor) {
-      toast.success("instructor added");
-    }
-    setFormData({ name: "", email: "", password: "" });
+    addInstructor(addFormData);
+    toast.success("Instructor added");
+    setAddFormData({ name: "", email: "", password: "" });
   };
 
   return (
-    <div className="p-4 bg-white shadow rounded">
+    <div className="p-4 bg-white shadow rounded pt-10">
       <h2 className="text-xl font-bold mb-4">Instructor List</h2>
+
+      {/* Add Instructor Form */}
       <form onSubmit={handleAdd} className="mb-4 flex flex-col">
         <input
           type="text"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          value={addFormData.name}
+          onChange={(e) =>
+            setAddFormData({ ...addFormData, name: e.target.value })
+          }
           className="border p-2 my-1"
           placeholder="Name"
           required
         />
         <input
           type="email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          value={addFormData.email}
+          onChange={(e) =>
+            setAddFormData({ ...addFormData, email: e.target.value })
+          }
           className="border p-2 my-1"
           placeholder="Email"
           required
         />
         <input
           type="password"
-          value={formData.password}
+          value={addFormData.password}
           onChange={(e) =>
-            setFormData({ ...formData, password: e.target.value })
+            setAddFormData({ ...addFormData, password: e.target.value })
           }
           className="border p-2 my-1"
           placeholder="Password"
@@ -84,16 +91,17 @@ const InstructorList = () => {
           Add Instructor
         </button>
       </form>
+
       <ul>
         {instructors.map((instructor) => (
-          <li key={instructor.id} className="border p-2 my-2">
-            {editId === instructor.id ? (
+          <li key={instructor._id} className="border p-2 my-2">
+            {editId === instructor._id ? (
               <form onSubmit={handleUpdate} className="flex flex-col">
                 <input
                   type="text"
-                  value={formData.name}
+                  value={editFormData.name}
                   onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
+                    setEditFormData({ ...editFormData, name: e.target.value })
                   }
                   className="border p-2 my-1"
                   placeholder="Name"
@@ -101,9 +109,9 @@ const InstructorList = () => {
                 />
                 <input
                   type="email"
-                  value={formData.email}
+                  value={editFormData.email}
                   onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
+                    setEditFormData({ ...editFormData, email: e.target.value })
                   }
                   className="border p-2 my-1"
                   placeholder="Email"
@@ -130,7 +138,7 @@ const InstructorList = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => deleteInstructor(instructor.id)}
+                    onClick={() => deleteInstructor(instructor._id)}
                     className="bg-red-500 text-white p-2 rounded"
                   >
                     Delete

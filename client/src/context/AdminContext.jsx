@@ -8,9 +8,24 @@ export const AdminProvider = ({ children }) => {
   const [instructors, setInstructors] = useState([]);
   const [courses, setCourses] = useState([]);
   const [lectures, setLectures] = useState([]);
+  const [allLectures, setAlllectures] = useState([]);
   const backendUrl = "http://localhost:5000"; // Update with your backend URL
 
-  // Fetch instructors from API
+  const [token, setToken] = useState(localStorage.getItem("adminToken") || "");
+
+  useEffect(() => {
+    localStorage.setItem("adminToken", token);
+  }, [token]);
+
+  const login = (newToken) => {
+    setToken(newToken);
+  };
+
+  const logout = () => {
+    setToken("");
+    localStorage.removeItem("adminToken");
+  };
+
   const fetchInstructors = async () => {
     try {
       const response = await axios.get(`${backendUrl}/api/instructors`);
@@ -20,7 +35,6 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
-  // Fetch courses from API
   const fetchCourses = async () => {
     try {
       const response = await axios.get(`${backendUrl}/api/courses`);
@@ -29,8 +43,15 @@ export const AdminProvider = ({ children }) => {
       console.error("Error fetching courses:", error);
     }
   };
+  const getAllLectures = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/lectures`);
+      setAlllectures(response.data);
+    } catch (error) {
+      console.error("Error fetching lectures:", error);
+    }
+  };
 
-  // Fetch lectures for a specific instructor
   const fetchLectures = async (instructorId) => {
     try {
       const response = await axios.get(
@@ -42,7 +63,6 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
-  // Add instructor via API
   const addInstructor = async (instructor) => {
     try {
       const response = await axios.post(
@@ -55,7 +75,6 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
-  // Update instructor via API
   const updateInstructor = async (id, updatedData) => {
     try {
       await axios.put(`${backendUrl}/api/instructors/${id}`, updatedData);
@@ -69,7 +88,6 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
-  // Delete instructor via API
   const deleteInstructor = async (id) => {
     try {
       await axios.delete(`${backendUrl}/api/instructors/${id}`);
@@ -79,12 +97,10 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
-  // Add a new course
   const addCourse = (course) => {
     setCourses((prev) => [...prev, course]);
   };
 
-  // Schedule a lecture via API
   const scheduleLecture = async (lecture) => {
     try {
       const response = await axios.post(`${backendUrl}/api/lectures`, {
@@ -118,8 +134,14 @@ export const AdminProvider = ({ children }) => {
         deleteInstructor,
         courses,
         fetchCourses,
+        token,
+        login,
+        logout,
         addCourse,
         lectures,
+        allLectures,
+        setAlllectures,
+        getAllLectures,
         fetchLectures,
         scheduleLecture,
       }}

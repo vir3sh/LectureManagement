@@ -30,6 +30,18 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const lectures = await Lecture.find()
+      .populate("course", "name") // Get only the 'name' field from Course
+      .populate("instructor", "name"); // Get only the 'name' field from Instructor
+
+    res.json(lectures);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
 // Get lectures for a specific instructor (for the Instructor Panel)
 router.get("/instructor/:instructorId", async (req, res) => {
   try {
